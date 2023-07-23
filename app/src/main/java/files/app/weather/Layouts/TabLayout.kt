@@ -1,5 +1,6 @@
 package files.app.weather.Layouts
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
@@ -32,7 +32,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import files.app.weather.logic.API
-import files.app.weather.logic.CardData
+import files.app.weather.logic.MiniCardData
 import files.app.weather.ui.theme.BlueLight
 import files.app.weather.ui.theme.Purple
 import kotlinx.coroutines.launch
@@ -63,7 +63,7 @@ fun TabLayout(data: API) {
             modifier = Modifier.padding(bottom = 3.dp)
         ) {
             tabList.forEachIndexed { index, text ->
-                Tab( selected = tabIndex == index, onClick = {
+                Tab(selected = tabIndex == index, onClick = {
                     tabIndex = index
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(tabIndex)
@@ -81,21 +81,29 @@ fun TabLayout(data: API) {
     }
 
     HorizontalPager(
-        count = tabList.size,
         state = pagerState,
-        itemSpacing = 3.dp
+        count = tabList.size,
+        itemSpacing = 3.dp,
     ) { index ->
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(if (index == 0) data.hours else data.days) { cardData ->
-                ListItem(cardData)
+        when (index) {
+            0 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
+                Log.d("MY_PAIN_IN_UI", "hours is empty: ${data.hours.value.isEmpty()}")
+                items(data.hours.value) { cardData ->
+                    ListItem(cardData)
+                }
+            }
+
+            1 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(data.days.value) { cardData ->
+                    ListItem(cardData)
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun ListItem(data: CardData) {
+fun ListItem(data: MiniCardData) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -111,14 +119,14 @@ fun ListItem(data: CardData) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)) {
-                Text(data.time)
+                Text(data.time.value)
                 Text(
-                    text = data.weatherState,
+                    text = data.weatherState.value,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(0.45f)
                 )
             }
-            Text(text = data.temperature, color = Color.White, fontSize = 25.sp)
+            Text(text = data.temperature.value, color = Color.White, fontSize = 25.sp)
             Image(
                 painter = rememberImagePainter(data.imageURL),
                 contentDescription = "weatherURL", modifier = Modifier.size(35.dp)

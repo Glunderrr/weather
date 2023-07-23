@@ -45,7 +45,7 @@ fun GetMainCard(data: API) {
                     .padding(start = 10.dp, end = 10.dp, top = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = cardData.date.value, color = Color.White)
+                Text(text = cardData.time.value, color = Color.White)
                 Image(
                     painter = rememberImagePainter(cardData.imageURL.value),
                     contentDescription = "weatherIng", modifier = Modifier.size(35.dp)

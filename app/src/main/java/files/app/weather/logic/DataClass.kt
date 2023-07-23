@@ -4,9 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
 
-data class MainCardData(
+data class MaxCardData(
     val actualCityName: MutableState<String> = mutableStateOf(""),
-    val date: MutableState<String> = mutableStateOf(""),
+    val time: MutableState<String> = mutableStateOf(""),
     val temperature: MutableState<String> = mutableStateOf(""),
     val temperatureFeelLike: MutableState<String> = mutableStateOf(""),
     val imageURL: MutableState<String> = mutableStateOf(""),
@@ -14,9 +14,9 @@ data class MainCardData(
     val windSpeed: MutableState<String> = mutableStateOf("")
 )
 
-data class CardData(
-    val time: String,
-    val imageURL: String,
-    val temperature: String,
-    val weatherState: String,
+data class MiniCardData(
+    val time: MutableState<String>,
+    val imageURL: MutableState<String>,
+    val temperature: MutableState<String>,
+    val weatherState: MutableState<String>,
 )

@@ -1,18 +1,22 @@
 package files.app.weather.logic
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 import kotlin.math.round
 
-data class API(private val responseCityName: String, private val context: Context) {
+@SuppressLint("MutableCollectionMutableState")
 
-    val card = MainCardData()
-    val days = mutableListOf<CardData>()
-    val hours = mutableListOf<CardData>()
+class API(responseCityName: String, private val context: Context) {
+
+    val card = MaxCardData()
+    val days = mutableStateOf(mutableListOf<MiniCardData>())
+    val hours = mutableStateOf(mutableListOf<MiniCardData>())
 
     init {
         update(responseCityName)
@@ -36,7 +40,7 @@ data class API(private val responseCityName: String, private val context: Contex
                 val JSONDaysDATA = forecast.getJSONArray("forecastday")
 
                 card.actualCityName.value = "" + location.getString("name")
-                card.date.value = location.getString("localtime")
+                card.time.value = location.getString("localtime")
                 card.temperature.value = "  " + current.getInt("temp_c").toString() + "°"
                 card.temperatureFeelLike.value = " Feels like ${current.getInt("feelslike_c")}°"
                 card.imageURL.value = "https:" + condition.getString("icon")
@@ -50,13 +54,13 @@ data class API(private val responseCityName: String, private val context: Contex
                     val day = dayData.getJSONObject("day")
                     val dayCondition = day.getJSONObject("condition")
 
-                    val dayCard = CardData(
-                        "" + dayData.getString("date"),
-                        "https:" + dayCondition.getString("icon"),
-                        "${day.getInt("mintemp_c")}°/${day.getInt("maxtemp_c")}°",
-                        "" + dayCondition.getString("text")
+                    val dayCard = MiniCardData(
+                        mutableStateOf(dayData.getString("date")),
+                        mutableStateOf("https:" + dayCondition.getString("icon")),
+                        mutableStateOf("${day.getInt("mintemp_c")}°/${day.getInt("maxtemp_c")}°"),
+                        mutableStateOf(dayCondition.getString("text"))
                     )
-                    days.add(dayCard)
+                    days.value.add(dayCard)
 
                     if (index == 0) {
                         val JSONHoursData = dayData.getJSONArray("hour")
@@ -64,16 +68,17 @@ data class API(private val responseCityName: String, private val context: Contex
                             val hourData = JSONHoursData.getJSONObject(i)
                             val hourConditions = hourData.getJSONObject("condition")
 
-                            val hourCard = CardData(
-                                "" + hourData.getString("time"),
-                                "https:" + hourConditions.getString("icon"),
-                                "${hourData.getInt("temp_c")}°",
-                                "" + hourConditions.getString("text")
+                            val hourCard = MiniCardData(
+                                mutableStateOf(hourData.getString("time")),
+                                mutableStateOf("https:" + hourConditions.getString("icon")),
+                                mutableStateOf("${hourData.getInt("temp_c")}°"),
+                                mutableStateOf(hourConditions.getString("text"))
                             )
-                            hours.add(hourCard)
+                            hours.value.add(hourCard)
                         }
                     }
                 }
+                Log.d("MY_PAIN_IN_API", "hours is empty: ${hours.value.isEmpty()}")
             }, {
                 Log.d("MY_API", "Name: $responseString; Error: $it")
             })
@@ -81,7 +86,7 @@ data class API(private val responseCityName: String, private val context: Contex
     }
 
     private fun clear() {
-        days.clear()
-        hours.clear()
+        days.value.clear()
+        hours.value.clear()
     }
 }
