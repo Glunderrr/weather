@@ -1,22 +1,23 @@
 package files.app.weather.logic
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import android.annotation.SuppressLint
 
-
-data class MaxCardData(
-    val actualCityName: MutableState<String> = mutableStateOf(""),
-    val time: MutableState<String> = mutableStateOf(""),
-    val temperature: MutableState<String> = mutableStateOf(""),
-    val temperatureFeelLike: MutableState<String> = mutableStateOf(""),
-    val imageURL: MutableState<String> = mutableStateOf(""),
-    val weatherState: MutableState<String> = mutableStateOf(""),
-    val windSpeed: MutableState<String> = mutableStateOf("")
+data class MiniData(
+    val time: String,
+    val imageURL: String,
+    val temperature: String,
+    val weatherState: String
 )
 
-data class MiniCardData(
-    val time: MutableState<String>,
-    val imageURL: MutableState<String>,
-    val temperature: MutableState<String>,
-    val weatherState: MutableState<String>,
+data class MaxData(
+    val actualCityName: String,
+    val windSpeed: String,
+    val temperatureFeelLike: String,
+    val miniCardData: MiniData
+)
+
+@SuppressLint("MutableCollectionMutableState")
+data class MaxDataWithHours(
+    val maxCardData: MaxData,
+    val mutableListOfHours: MutableList<MiniData> = mutableListOf()
 )

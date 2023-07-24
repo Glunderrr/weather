@@ -30,7 +30,7 @@ import files.app.weather.ui.theme.BlueLight
 
 @Composable
 fun GetMainCard(data: API) {
-    val cardData = data.card
+    val cardData = data.mainCard
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(BlueLight)
@@ -45,26 +45,26 @@ fun GetMainCard(data: API) {
                     .padding(start = 10.dp, end = 10.dp, top = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = cardData.time.value, color = Color.White)
+                Text(text = cardData.miniCardData.time, color = Color.White)
                 Image(
-                    painter = rememberImagePainter(cardData.imageURL.value),
+                    painter = rememberImagePainter(cardData.miniCardData.imageURL),
                     contentDescription = "weatherIng", modifier = Modifier.size(35.dp)
                 )
             }
             Text(
-                text = cardData.actualCityName.value,
+                text = cardData.actualCityName,
                 color = Color.White,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
-            Text(text = cardData.temperature.value, color = Color.White, fontSize = 75.sp)
+            Text(text = cardData.miniCardData.temperature, color = Color.White, fontSize = 75.sp)
             Text(
-                text = cardData.temperatureFeelLike.value,
+                text = cardData.temperatureFeelLike,
                 color = Color.White, fontSize = 20.sp
             )
             Text(
-                text = "${cardData.weatherState.value}/${cardData.windSpeed.value}",
+                text = "${cardData.miniCardData.weatherState} /${cardData.windSpeed}",
                 color = Color.White
             )
             Row(
@@ -81,7 +81,7 @@ fun GetMainCard(data: API) {
                     )
                 }
                 IconButton(onClick = {
-                    data.update(cardData.actualCityName.value)
+                    data.searchByResponse(cardData.actualCityName)
                     Log.d("MY_API", "Data is updated")
                 }) {
                     Icon(

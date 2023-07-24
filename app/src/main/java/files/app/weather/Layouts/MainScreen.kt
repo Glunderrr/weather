@@ -23,7 +23,7 @@ fun MainScreen(data: API) {
             .padding(10.dp)
     ) {
         GetMainCard(data)
-        TabLayout(data = data)
+        TabLayout(data)
     }
 }
 

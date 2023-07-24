@@ -2,6 +2,7 @@ package files.app.weather.Layouts
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import files.app.weather.logic.API
-import files.app.weather.logic.MiniCardData
+import files.app.weather.logic.MaxDataWithHours
+import files.app.weather.logic.MiniData
 import files.app.weather.ui.theme.BlueLight
 import files.app.weather.ui.theme.Purple
 import kotlinx.coroutines.launch
@@ -87,15 +89,15 @@ fun TabLayout(data: API) {
     ) { index ->
         when (index) {
             0 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                Log.d("MY_PAIN_IN_UI", "hours is empty: ${data.hours.value.isEmpty()}")
-                items(data.hours.value) { cardData ->
+                Log.d("MY_PAIN_IN_MainScreen", "hoursList is empty: ${data.hours.isEmpty()}")
+                items(data.hours) { cardData ->
                     ListItem(cardData)
                 }
             }
 
             1 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(data.days.value) { cardData ->
-                    ListItem(cardData)
+                items(data.days) { cardData ->
+                    ListItem(cardData,data)
                 }
             }
         }
@@ -103,7 +105,7 @@ fun TabLayout(data: API) {
 }
 
 @Composable
-fun ListItem(data: MiniCardData) {
+fun ListItem(data: MiniData) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,16 +121,51 @@ fun ListItem(data: MiniCardData) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)) {
-                Text(data.time.value)
+                Text(data.time)
                 Text(
-                    text = data.weatherState.value,
+                    text = data.weatherState,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(0.45f)
                 )
             }
-            Text(text = data.temperature.value, color = Color.White, fontSize = 25.sp)
+            Text(text = data.temperature, color = Color.White, fontSize = 25.sp)
             Image(
                 painter = rememberImagePainter(data.imageURL),
+                contentDescription = "weatherURL", modifier = Modifier.size(35.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ListItem(maxDataWithHours: MaxDataWithHours, data:API) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 3.dp, bottom = 3.dp).clickable {
+                            data.updateList(maxDataWithHours)
+            },
+        color = BlueLight,
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)) {
+                Text(maxDataWithHours.maxCardData.miniCardData.time)
+                Text(
+                    text = maxDataWithHours.maxCardData.miniCardData.weatherState,
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth(0.45f)
+                )
+            }
+            Text(text = maxDataWithHours.maxCardData.miniCardData.temperature, color = Color.White, fontSize = 25.sp)
+            Image(
+                painter = rememberImagePainter(maxDataWithHours.maxCardData.miniCardData.imageURL),
                 contentDescription = "weatherURL", modifier = Modifier.size(35.dp)
             )
         }
