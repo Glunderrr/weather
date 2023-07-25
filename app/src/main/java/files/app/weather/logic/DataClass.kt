@@ -12,12 +12,14 @@ data class MiniData(
 data class MaxData(
     val actualCityName: String,
     val windSpeed: String,
-    val temperatureFeelLike: String,
     val miniCardData: MiniData
-)
+) {
+    constructor() : this("",  "", MiniData("", "", "", ""))
+}
+
 
 @SuppressLint("MutableCollectionMutableState")
 data class MaxDataWithHours(
     val maxCardData: MaxData,
-    val mutableListOfHours: MutableList<MiniData> = mutableListOf()
+    val listOfHours: List<MiniData> = mutableListOf()
 )

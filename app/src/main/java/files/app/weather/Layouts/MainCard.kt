@@ -14,6 +14,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,26 +47,26 @@ fun GetMainCard(data: API) {
                     .padding(start = 10.dp, end = 10.dp, top = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = cardData.miniCardData.time, color = Color.White)
+                Text(text = cardData.value.miniCardData.time, color = Color.White)
                 Image(
-                    painter = rememberImagePainter(cardData.miniCardData.imageURL),
+                    painter = rememberImagePainter(cardData.value.miniCardData.imageURL),
                     contentDescription = "weatherIng", modifier = Modifier.size(35.dp)
                 )
             }
             Text(
-                text = cardData.actualCityName,
+                text = cardData.value.actualCityName,
                 color = Color.White,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
-            Text(text = cardData.miniCardData.temperature, color = Color.White, fontSize = 75.sp)
+            Text(text = cardData.value.miniCardData.temperature, color = Color.White, fontSize = 75.sp)
             Text(
-                text = cardData.temperatureFeelLike,
+                text = cardData.value.miniCardData.weatherState,
                 color = Color.White, fontSize = 20.sp
             )
             Text(
-                text = "${cardData.miniCardData.weatherState} /${cardData.windSpeed}",
+                text = cardData.value.windSpeed,
                 color = Color.White
             )
             Row(
@@ -81,7 +83,7 @@ fun GetMainCard(data: API) {
                     )
                 }
                 IconButton(onClick = {
-                    data.searchByResponse(cardData.actualCityName)
+                    data.searchByResponse(cardData.value.actualCityName)
                     Log.d("MY_API", "Data is updated")
                 }) {
                     Icon(

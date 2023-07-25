@@ -1,4 +1,4 @@
-package files.app.weather.ui.theme
+package files.app.weather.Layouts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import files.app.weather.R
+import files.app.weather.ui.theme.Pink
 import kotlinx.coroutines.delay
 
 

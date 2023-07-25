@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import files.app.weather.Layouts.MainScreen
 import files.app.weather.logic.API
-import files.app.weather.ui.theme.SplashScreen
+import files.app.weather.Layouts.SplashScreen
 
 
 class MainActivity : ComponentActivity() {

@@ -13,8 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
 import androidx.compose.material.TabRow
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
@@ -56,7 +57,7 @@ fun TabLayout(data: API) {
             selectedTabIndex = tabIndex,
             indicator = { pos ->
                 TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, pos),
+                    Modifier.pagerTabIndicatorOffset(pagerState, pos.subList(0, pos.size)),
                     color = Purple,
                     height = 2.dp
                 )
@@ -89,15 +90,15 @@ fun TabLayout(data: API) {
     ) { index ->
         when (index) {
             0 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                Log.d("MY_PAIN_IN_MainScreen", "hoursList is empty: ${data.hours.isEmpty()}")
-                items(data.hours) { cardData ->
+                Log.d("MY_PAIN_IN_MainScreen", "hoursList is empty: ${data.hours.value.isEmpty()}")
+                items(data.hours.value) { cardData ->
                     ListItem(cardData)
                 }
             }
 
             1 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(data.days) { cardData ->
-                    ListItem(cardData,data)
+                items(data.days.value) { cardData ->
+                    ListItem(cardData, data)
                 }
             }
         }
@@ -106,68 +107,50 @@ fun TabLayout(data: API) {
 
 @Composable
 fun ListItem(data: MiniData) {
-    Surface(
+    Card(
+        colors = CardDefaults.cardColors(BlueLight),
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 3.dp, bottom = 3.dp),
-        color = BlueLight,
-        shape = RoundedCornerShape(10.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)) {
-                Text(data.time)
-                Text(
-                    text = data.weatherState,
-                    color = Color.White,
-                    modifier = Modifier.fillMaxWidth(0.45f)
-                )
-            }
-            Text(text = data.temperature, color = Color.White, fontSize = 25.sp)
-            Image(
-                painter = rememberImagePainter(data.imageURL),
-                contentDescription = "weatherURL", modifier = Modifier.size(35.dp)
-            )
-        }
+        ListItemContent(miniCardData = data)
     }
 }
 
 @Composable
-fun ListItem(maxDataWithHours: MaxDataWithHours, data:API) {
-    Surface(
+fun ListItem(maxDataWithHours: MaxDataWithHours, data: API) {
+    Card(
+        colors = CardDefaults.cardColors(BlueLight),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 3.dp, bottom = 3.dp).clickable {
-                            data.updateList(maxDataWithHours)
-            },
-        color = BlueLight,
-        shape = RoundedCornerShape(10.dp)
+            .padding(top = 3.dp, bottom = 3.dp)
+            .clickable { data.updateList(maxDataWithHours) }
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)) {
-                Text(maxDataWithHours.maxCardData.miniCardData.time)
-                Text(
-                    text = maxDataWithHours.maxCardData.miniCardData.weatherState,
-                    color = Color.White,
-                    modifier = Modifier.fillMaxWidth(0.45f)
-                )
-            }
-            Text(text = maxDataWithHours.maxCardData.miniCardData.temperature, color = Color.White, fontSize = 25.sp)
-            Image(
-                painter = rememberImagePainter(maxDataWithHours.maxCardData.miniCardData.imageURL),
-                contentDescription = "weatherURL", modifier = Modifier.size(35.dp)
+        ListItemContent(maxDataWithHours.maxCardData.miniCardData)
+    }
+}
+
+@Composable
+fun ListItemContent(miniCardData: MiniData) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)) {
+            Text(miniCardData.time)
+            Text(
+                text = miniCardData.weatherState,
+                color = Color.White,
+                modifier = Modifier.fillMaxWidth(0.45f)
             )
         }
+        Text(text = miniCardData.temperature, color = Color.White, fontSize = 25.sp)
+        Image(
+            painter = rememberImagePainter(miniCardData.imageURL),
+            contentDescription = "weatherURL", modifier = Modifier.size(35.dp)
+        )
     }
 }
