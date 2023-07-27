@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import files.app.weather.R
-import files.app.weather.logic.API
 import files.app.weather.logic.InternetConnection
 import files.app.weather.ui.theme.DarkPink
 import files.app.weather.ui.theme.Pink
@@ -39,7 +38,7 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun SplashScreen( navController: NavController, internetConnection: InternetConnection) {
+fun SplashScreen(navController: NavController, internetConnection: InternetConnection) {
     var visible by remember { mutableStateOf(true) }
     if (visible) SplashScreenContent(internetConnection)
     LaunchedEffect(key1 = internetConnection.isConnected) {

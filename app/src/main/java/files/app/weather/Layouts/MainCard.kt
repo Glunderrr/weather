@@ -27,11 +27,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import files.app.weather.R
 import files.app.weather.logic.API
-import files.app.weather.logic.SharedPref
 import files.app.weather.ui.theme.BlueLight
 
 @Composable
-fun GetMainCard(data: API, sharedPref: SharedPref) {
+fun GetMainCard(data: API) {
     val cardData = data.mainCard
     val searchDialogVisible = remember { mutableStateOf(false) }
     if (searchDialogVisible.value)

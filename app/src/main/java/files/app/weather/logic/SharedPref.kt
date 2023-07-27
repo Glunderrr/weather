@@ -2,7 +2,6 @@ package files.app.weather.logic
 
 import android.content.Context
 import android.content.SharedPreferences
-import files.app.weather.R
 
 class SharedPref(context: Context) {
 
