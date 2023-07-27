@@ -3,6 +3,7 @@ package files.app.weather.logic
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.android.volley.Request
@@ -18,8 +19,8 @@ class API(responseCityName: String, private val context: Context) {
     val days = mutableStateOf(mutableListOf<MaxDataWithHours>())
     val hours = mutableStateOf(mutableListOf<MiniData>())
 
-    fun searchByResponse(responseString: String) {
 
+    fun searchByResponse(responseString: String) {
         days.value.clear()
         hours.value.clear()
         val apiKey = "0e615d406b1546639df111028232107"
@@ -85,7 +86,20 @@ class API(responseCityName: String, private val context: Context) {
                     if (index == 0) hours.value.addAll(mutableListOfHours)
                 }
                 Log.d("MY_PAIN_IN_API", "hoursList is empty: ${hours.value.isEmpty()}")
+                Log.d("MY_API", "without errors")
             }, {
+                responseErrorIndicator = true
+                /*if(internetConnection)
+                    Toast.makeText(
+                        context,
+                        "no internet connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                else*/ if (responseErrorIndicator && !internetConnection) Toast.makeText(
+                    context,
+                    "Incorrect city name",
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.d("MY_API", "Name: $responseString; Error: $it")
             })
         queue.add(stringRequest)
@@ -101,3 +115,4 @@ class API(responseCityName: String, private val context: Context) {
         searchByResponse(responseCityName)
     }
 }
+

@@ -1,6 +1,7 @@
 package files.app.weather.Layouts
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,12 +28,24 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import files.app.weather.R
 import files.app.weather.logic.API
+import files.app.weather.logic.responseErrorIndicator
 import files.app.weather.ui.theme.BlueLight
-
 
 @Composable
 fun GetMainCard(data: API) {
     val cardData = data.mainCard
+    val searchDialogVisible = remember { mutableStateOf(false) }
+
+/*    if (responseErrorIndicator.value)
+        Toast.makeText(
+            data.context,
+            "Unable to update weather data, please check your internet connection",
+            Toast.LENGTH_LONG
+        ).show()*/
+
+    if (searchDialogVisible.value)
+        SearchDialog(searchDialogVisible, data)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(BlueLight)
@@ -60,7 +73,11 @@ fun GetMainCard(data: API) {
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
-            Text(text = cardData.value.miniCardData.temperature, color = Color.White, fontSize = 75.sp)
+            Text(
+                text = cardData.value.miniCardData.temperature,
+                color = Color.White,
+                fontSize = 75.sp
+            )
             Text(
                 text = cardData.value.miniCardData.weatherState,
                 color = Color.White, fontSize = 20.sp
@@ -75,7 +92,7 @@ fun GetMainCard(data: API) {
                     .padding(start = 10.dp, end = 10.dp, bottom = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { searchDialogVisible.value = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
                         contentDescription = "search",
@@ -83,7 +100,7 @@ fun GetMainCard(data: API) {
                     )
                 }
                 IconButton(onClick = {
-                    data.searchByResponse(cardData.value.actualCityName)
+                    data.searchByResponse("Khmilnyk")
                     Log.d("MY_API", "Data is updated")
                 }) {
                     Icon(
