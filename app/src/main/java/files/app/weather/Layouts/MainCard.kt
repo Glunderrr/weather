@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,10 +30,13 @@ import files.app.weather.R
 import files.app.weather.logic.API
 import files.app.weather.ui.theme.BlueLight
 
-
 @Composable
 fun GetMainCard(data: API) {
     val cardData = data.mainCard
+    val searchDialogVisible = remember { mutableStateOf(false) }
+    if (searchDialogVisible.value)
+        SearchDialog(searchDialogVisible, data)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(BlueLight)
@@ -60,7 +64,11 @@ fun GetMainCard(data: API) {
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
-            Text(text = cardData.value.miniCardData.temperature, color = Color.White, fontSize = 75.sp)
+            Text(
+                text = cardData.value.miniCardData.temperature,
+                color = Color.White,
+                fontSize = 75.sp
+            )
             Text(
                 text = cardData.value.miniCardData.weatherState,
                 color = Color.White, fontSize = 20.sp
@@ -75,7 +83,7 @@ fun GetMainCard(data: API) {
                     .padding(start = 10.dp, end = 10.dp, bottom = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { searchDialogVisible.value = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
                         contentDescription = "search",
@@ -83,7 +91,7 @@ fun GetMainCard(data: API) {
                     )
                 }
                 IconButton(onClick = {
-                    data.searchByResponse(cardData.value.actualCityName)
+                    data.searchByResponse("Khmilnyk")
                     Log.d("MY_API", "Data is updated")
                 }) {
                     Icon(

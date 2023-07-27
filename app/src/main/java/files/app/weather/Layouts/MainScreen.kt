@@ -11,11 +11,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import files.app.weather.R
 import files.app.weather.logic.API
+import files.app.weather.logic.InternetConnection
 
 @Composable
-fun MainScreen(data: API) {
+fun MainScreen(data: API, navController: NavController, internetConnection: InternetConnection) {
+    if (!internetConnection.isConnected) navController.navigate("splash_screen")
     BackGround()
     Column(
         modifier = Modifier
@@ -29,7 +32,7 @@ fun MainScreen(data: API) {
 
 @Preview(showBackground = true)
 @Composable
-fun BackGround(){
+fun BackGround() {
     Image(
         painter = painterResource(id = R.drawable.background),
         contentDescription = "Background",

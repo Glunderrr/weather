@@ -3,6 +3,7 @@ package files.app.weather.logic
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.android.volley.Request
@@ -13,13 +14,20 @@ import kotlin.math.round
 
 
 @SuppressLint("MutableCollectionMutableState")
-class API(responseCityName: String, private val context: Context) {
+class API(
+    private val context: Context,
+    private val internetConnection: InternetConnection
+) {
     val mainCard: MutableState<MaxData> = mutableStateOf(MaxData())
     val days = mutableStateOf(mutableListOf<MaxDataWithHours>())
     val hours = mutableStateOf(mutableListOf<MiniData>())
 
     fun searchByResponse(responseString: String) {
+        if (internetConnection.isConnected)
+            searchInInternet(responseString)
+    }
 
+    private fun searchInInternet(responseString: String) {
         days.value.clear()
         hours.value.clear()
         val apiKey = "0e615d406b1546639df111028232107"
@@ -84,8 +92,9 @@ class API(responseCityName: String, private val context: Context) {
                     )
                     if (index == 0) hours.value.addAll(mutableListOfHours)
                 }
-                Log.d("MY_PAIN_IN_API", "hoursList is empty: ${hours.value.isEmpty()}")
+                Log.d("MY_API", "Name: $responseString; Completed")
             }, {
+                Toast.makeText(context, "Incorrect city name", Toast.LENGTH_SHORT).show()
                 Log.d("MY_API", "Name: $responseString; Error: $it")
             })
         queue.add(stringRequest)
@@ -96,8 +105,5 @@ class API(responseCityName: String, private val context: Context) {
         hours.value.addAll(newDay.listOfHours)
         mainCard.value = newDay.maxCardData
     }
-
-    init {
-        searchByResponse(responseCityName)
-    }
 }
+
