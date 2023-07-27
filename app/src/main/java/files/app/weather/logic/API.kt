@@ -24,10 +24,10 @@ class API(
 
     fun searchByResponse(responseString: String) {
         if (internetConnection.isConnected)
-            searchInInternet(responseString)
+            searchByInternet(responseString)
     }
 
-    private fun searchInInternet(responseString: String) {
+    private fun searchByInternet(responseString: String) {
         days.value.clear()
         hours.value.clear()
         val apiKey = "0e615d406b1546639df111028232107"
