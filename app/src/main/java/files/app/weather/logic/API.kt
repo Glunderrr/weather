@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import files.app.weather.R
 import org.json.JSONObject
 import kotlin.math.round
 
@@ -16,18 +17,24 @@ import kotlin.math.round
 @SuppressLint("MutableCollectionMutableState")
 class API(
     private val context: Context,
-    private val internetConnection: InternetConnection
+    private val internetConnection: InternetConnection,
+    private val sharedPref: SharedPref
 ) {
     val mainCard: MutableState<MaxData> = mutableStateOf(MaxData())
     val days = mutableStateOf(mutableListOf<MaxDataWithHours>())
     val hours = mutableStateOf(mutableListOf<MiniData>())
 
-    fun searchByResponse(responseString: String) {
+    fun searchByResponse(responseString: String, save: Boolean) {
         if (internetConnection.isConnected)
-            searchInInternet(responseString)
+            searchInInternet(responseString, save)
     }
 
-    private fun searchInInternet(responseString: String) {
+    fun searchByResponse() {
+        if (internetConnection.isConnected)
+            searchInInternet(sharedPref.getDefCityName(), false)
+    }
+
+    private fun searchInInternet(responseString: String, save: Boolean) {
         days.value.clear()
         hours.value.clear()
         val apiKey = "0e615d406b1546639df111028232107"
@@ -91,10 +98,13 @@ class API(
                         )
                     )
                     if (index == 0) hours.value.addAll(mutableListOfHours)
+                    if (responseString != sharedPref.getDefCityName() && save) sharedPref.setDefCityName(
+                        responseString
+                    )
                 }
                 Log.d("MY_API", "Name: $responseString; Completed")
             }, {
-                Toast.makeText(context, "Incorrect city name", Toast.LENGTH_SHORT).show()
+                if(responseString !="") Toast.makeText(context, R.string.responseCityError, Toast.LENGTH_SHORT).show()
                 Log.d("MY_API", "Name: $responseString; Error: $it")
             })
         queue.add(stringRequest)
@@ -104,6 +114,10 @@ class API(
         hours.value.clear()
         hours.value.addAll(newDay.listOfHours)
         mainCard.value = newDay.maxCardData
+    }
+
+    fun isEmpty(): Boolean {
+        return days.value.isEmpty() && hours.value.isEmpty()
     }
 }
 

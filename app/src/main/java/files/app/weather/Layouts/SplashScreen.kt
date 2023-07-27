@@ -46,7 +46,7 @@ fun SplashScreen( navController: NavController, internetConnection: InternetConn
         if (internetConnection.isConnected) {
             delay(1000)
             visible = false
-            navController.navigate("main_content")
+            navController.navigate("${R.string.main_screen}")
         }
     }
 }
@@ -88,7 +88,7 @@ fun SplashScreenContent(internetConnection: InternetConnection) {
                 .fillMaxHeight(0.9f), contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (internetConnection.isConnected) "" else "no internet connection",
+                text = if (internetConnection.isConnected) "" else "No internet connection",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp

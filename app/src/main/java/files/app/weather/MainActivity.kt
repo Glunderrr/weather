@@ -10,22 +10,23 @@ import files.app.weather.Layouts.MainScreen
 import files.app.weather.Layouts.SplashScreen
 import files.app.weather.logic.API
 import files.app.weather.logic.InternetConnection
+import files.app.weather.logic.SharedPref
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val responseCity = "Khmilnyk"
+        val sharedPref = SharedPref(this)
         val internetConnection = InternetConnection(this)
-        val data = API( this, internetConnection)
+        val data = API(this, internetConnection, sharedPref)
         setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "splash_screen") {
-                composable("splash_screen") {
-                    data.searchByResponse(responseCity)
-                    SplashScreen(navController,internetConnection)
+            NavHost(navController = navController, startDestination = "${R.string.splash_screen}") {
+                composable("${R.string.splash_screen}") {
+                    if (data.isEmpty()) data.searchByResponse()
+                    SplashScreen(navController, internetConnection)
                 }
-                composable("main_content") {
-                    MainScreen(data, navController,internetConnection)
+                composable("${R.string.main_screen}") {
+                    MainScreen(data, navController, internetConnection, sharedPref)
                 }
             }
         }

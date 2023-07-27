@@ -15,17 +15,24 @@ import androidx.navigation.NavController
 import files.app.weather.R
 import files.app.weather.logic.API
 import files.app.weather.logic.InternetConnection
+import files.app.weather.logic.SharedPref
 
 @Composable
-fun MainScreen(data: API, navController: NavController, internetConnection: InternetConnection) {
-    if (!internetConnection.isConnected) navController.navigate("splash_screen")
+fun MainScreen(
+    data: API,
+    navController: NavController,
+    internetConnection: InternetConnection,
+    sharedPref: SharedPref
+) {
+    if (!internetConnection.isConnected)
+        navController.navigate("${R.string.splash_screen}")
     BackGround()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        GetMainCard(data)
+        GetMainCard(data, sharedPref)
         TabLayout(data)
     }
 }

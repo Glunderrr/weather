@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">weather</string>
+    <string name="responseCityError">Incorrect city name</string>
+    <string name="splash_screen">splash_screen</string>
+    <string name="main_screen">main_screen</string>
 </resources>

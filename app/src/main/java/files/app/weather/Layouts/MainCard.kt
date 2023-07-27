@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,10 +27,11 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import files.app.weather.R
 import files.app.weather.logic.API
+import files.app.weather.logic.SharedPref
 import files.app.weather.ui.theme.BlueLight
 
 @Composable
-fun GetMainCard(data: API) {
+fun GetMainCard(data: API, sharedPref: SharedPref) {
     val cardData = data.mainCard
     val searchDialogVisible = remember { mutableStateOf(false) }
     if (searchDialogVisible.value)
@@ -54,7 +54,7 @@ fun GetMainCard(data: API) {
                 Text(text = cardData.value.miniCardData.time, color = Color.White)
                 Image(
                     painter = rememberImagePainter(cardData.value.miniCardData.imageURL),
-                    contentDescription = "weatherIng", modifier = Modifier.size(35.dp)
+                    contentDescription = "weatherImg", modifier = Modifier.size(35.dp)
                 )
             }
             Text(
@@ -91,7 +91,7 @@ fun GetMainCard(data: API) {
                     )
                 }
                 IconButton(onClick = {
-                    data.searchByResponse("Khmilnyk")
+                    data.searchByResponse()
                     Log.d("MY_API", "Data is updated")
                 }) {
                     Icon(
