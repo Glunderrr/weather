@@ -35,8 +35,6 @@ class API(
     }
 
     private fun searchInInternet(responseString: String, save: Boolean) {
-        days.value.clear()
-        hours.value.clear()
         val apiKey = "0e615d406b1546639df111028232107"
         val url =
             "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=$responseString&days=10&aqi=no&alerts=no"
@@ -62,7 +60,8 @@ class API(
                         weatherState = condition.getString("text"),
                     )
                 )
-
+                days.value.clear()
+                hours.value.clear()
                 for (index in 0 until jsonDaysDATA.length()) {
                     val dayData = jsonDaysDATA.getJSONObject(index)
                     val day = dayData.getJSONObject("day")
@@ -104,7 +103,7 @@ class API(
                 }
                 Log.d("MY_API", "Name: $responseString; Completed")
             }, {
-                if(responseString !="") Toast.makeText(context, R.string.responseCityError, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.responseCityError, Toast.LENGTH_LONG).show()
                 Log.d("MY_API", "Name: $responseString; Error: $it")
             })
         queue.add(stringRequest)
@@ -120,4 +119,3 @@ class API(
         return days.value.isEmpty() && hours.value.isEmpty()
     }
 }
-

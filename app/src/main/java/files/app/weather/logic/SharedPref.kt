@@ -25,5 +25,4 @@ class SharedPref(context: Context) {
     init {
         sharedPref = context.getSharedPreferences(prefKey, Context.MODE_PRIVATE)
     }
-
 }
