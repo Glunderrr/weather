@@ -90,7 +90,7 @@ fun GetMainCard(data: API) {
                     )
                 }
                 IconButton(onClick = {
-                    data.searchByResponse()
+                    data.searchByDefCity()
                     Log.d("MY_API", "Data is updated")
                 }) {
                     Icon(

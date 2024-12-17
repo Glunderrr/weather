@@ -23,16 +23,12 @@ class InternetConnection(context: Context) : ViewModel() {
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                viewModelScope.launch {
-                    isConnected = true
-                }
+                viewModelScope.launch { isConnected = true }
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                viewModelScope.launch {
-                    isConnected = false
-                }
+                viewModelScope.launch { isConnected = false }
             }
         }
 

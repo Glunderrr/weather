@@ -29,7 +29,7 @@ class API(
             searchInInternet(responseString, save)
     }
 
-    fun searchByResponse() {
+    fun searchByDefCity() {
         if (internetConnection.isConnected)
             searchInInternet(sharedPref.getDefCityName(), false)
     }
@@ -37,7 +37,7 @@ class API(
     private fun searchInInternet(responseString: String, save: Boolean) {
         val apiKey = "0e615d406b1546639df111028232107"
         val url =
-            "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=$responseString&days=10&aqi=no&alerts=no"
+            "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=$responseString&days=10&aqi=no&alerts=no&"
         val queue = Volley.newRequestQueue(context)
         val stringRequest = StringRequest(
             Request.Method.GET,

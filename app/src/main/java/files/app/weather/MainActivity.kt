@@ -22,11 +22,11 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "${R.string.splash_screen}") {
                 composable("${R.string.splash_screen}") {
-                    if (data.isEmpty()) data.searchByResponse()
+                    if (data.isEmpty()) data.searchByDefCity()
                     SplashScreen(navController, internetConnection)
                 }
                 composable("${R.string.main_screen}") {
-                    MainScreen(data, navController, internetConnection, sharedPref)
+                    MainScreen(data, navController, internetConnection)
                 }
             }
         }
